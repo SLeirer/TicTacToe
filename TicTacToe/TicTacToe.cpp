@@ -1,9 +1,3 @@
-// TicTacToe
-
-
-// !!! noch zu erledigenden Aufgaben !!!
-// Keine, alles erledigt was ich mir vorgenommen hatte
-
 #include <iostream>
 #include <time.h>
 #include <stdlib.h>
@@ -11,68 +5,22 @@
 
 using namespace std;
 
-//Prototyping
-int halloGithub;
+////////////////////////////////////////////////////////////////
+//			noch zu erledigenden Aufgaben					  //
+////////////////////////////////////////////////////////////////
+/*
+		Refractoring
+*/
+
+////////////////////////////////////////////////////////////////
+//			Minimax Anteile									  //
+////////////////////////////////////////////////////////////////
+
 bool minimax_isMovesLeft(char[9]);			//minimax-algorhytmus methoden
 int minimax_evaluate(char[9]);
-int minimax_minimax(char[9], int, bool);
+int minimax_Recusion(char[9], int, bool);
 int minimax_findBestMove(char[9]);
-void feldZeichnen(char[9]);					//Spiel methoden
-void ladebalken();
-int zug(char[9], int, int);
-int gameover_bedingung(char[9], int);
-int menu();
-int mode();
-void spiel(int, int, bool, char[9], int, int);
-bool zugErmittlung(char, char[9], bool);	//bot methoden
-void bot(char[9], int);
 
-int main()
-{
-	char feldarray[9];
-	bool gameover = false, beendet = false;
-	int turn = 0;
-	int anfangs_spieler, spieler = 0;
-	int modus = 1;
-
-	//zufallsgeneration des anfangsspielers
-	srand(time(NULL));
-	anfangs_spieler = rand() % (2);
-
-	//felder vorläufig mit leerstelle befüllen
-	for (int i = 0; i < 9; i++)
-	{
-		feldarray[i] = ' ';
-	}
-	
-	//spaßeshalber
-	ladebalken();
-
-	//menüaufruf und schlaufe bis das programm manuell beendet wird
-	while (beendet == false)
-	{
-		int eingabe = menu();
-		//Spielstart
-		if (eingabe == 1)
-		{
-			spiel(spieler, anfangs_spieler, gameover, feldarray, turn, modus);
-			for (int i = 0; i < 9; i++)
-			{
-				feldarray[i] = ' ';
-			}
-		}
-		//Modusauswahl
-		else if (eingabe == 2)
-		{
-			modus = mode();
-		}
-		//Programm wird beendet
-		else if (eingabe == 3)
-		{
-			beendet = true;
-		}
-	}
-}
 
 bool minimax_isMovesLeft(char feldarray[9])
 {
@@ -147,8 +95,9 @@ int minimax_evaluate(char feldarray[9])
 	return 0;
 }
 
-int minimax_minimax(char feldarray[9], int depth, bool isMax)
+int minimax_Recusion(char feldarray[9], int depth, bool isMax)
 {
+	//ruft recursiv die minimax_Recursion's methode auf solange bis die Endbedingungen erreicht sind
 	//Wert nach dem die züge gemessen werden
 	int score = minimax_evaluate(feldarray);
 
@@ -166,7 +115,7 @@ int minimax_minimax(char feldarray[9], int depth, bool isMax)
 			if (feldarray[i] == ' ')
 			{
 				feldarray[i] = 'X';
-				best = max(best, minimax_minimax(feldarray, depth + 1, !isMax));
+				best = max(best, minimax_Recusion(feldarray, depth + 1, !isMax));
 				feldarray[i] = ' ';
 			}
 		}
@@ -181,7 +130,7 @@ int minimax_minimax(char feldarray[9], int depth, bool isMax)
 			if (feldarray[i] == ' ')
 			{
 				feldarray[i] = 'O';
-				best = min(best, minimax_minimax(feldarray, depth + 1, !isMax));
+				best = min(best, minimax_Recusion(feldarray, depth + 1, !isMax));
 				feldarray[i] = ' ';
 			}
 		}
@@ -199,7 +148,7 @@ int minimax_findBestMove(char feldarray[9])
 		if (feldarray[i] == ' ')
 		{
 			feldarray[i] = 'X';
-			int moveVal = minimax_minimax(feldarray, 0, false);
+			int moveVal = minimax_Recusion(feldarray, 0, false);
 			feldarray[i] = ' ';
 
 			if (moveVal > bestVal)
@@ -210,6 +159,65 @@ int minimax_findBestMove(char feldarray[9])
 		}
 	}
 	return bestMove;
+}
+
+//Prototyping
+
+void feldZeichnen(char[9]);					//Spiel methoden
+void ladebalken();
+int zug(char[9], int, int);
+int gameover_bedingung(char[9], int);
+int menu();
+int mode();
+void spiel(int, int, bool, char[9], int, int);
+bool zugErmittlung(char, char[9], bool);	//bot methoden
+void bot(char[9], int);
+
+int main()
+{
+	char feldarray[9];
+	bool gameover = false, beendet = false;
+	int turn = 0;
+	int anfangs_spieler, spieler = 0;
+	int modus = 1;
+
+	//zufallsgeneration des anfangsspielers
+	srand(time(NULL));
+	anfangs_spieler = rand() % (2);
+
+	//felder vorläufig mit leerstelle befüllen
+	for (int i = 0; i < 9; i++)
+	{
+		feldarray[i] = ' ';
+	}
+	
+	//spaßeshalber
+	ladebalken();
+
+	//menüaufruf und schlaufe bis das programm manuell beendet wird
+	while (beendet == false)
+	{
+		int eingabe = menu();
+		//Spielstart
+		if (eingabe == 1)
+		{
+			spiel(spieler, anfangs_spieler, gameover, feldarray, turn, modus);
+			for (int i = 0; i < 9; i++)
+			{
+				feldarray[i] = ' ';
+			}
+		}
+		//Modusauswahl
+		else if (eingabe == 2)
+		{
+			modus = mode();
+		}
+		//Programm wird beendet
+		else if (eingabe == 3)
+		{
+			beendet = true;
+		}
+	}
 }
 
 void feldZeichnen(char feldarray[9])
