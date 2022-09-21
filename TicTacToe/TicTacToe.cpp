@@ -9,18 +9,77 @@ using namespace std;
 //			noch zu erledigenden Aufgaben					  //
 ////////////////////////////////////////////////////////////////
 /*
-		Refractoring
+		Kommentierung
 */
+
+//Prototyping
+//minimax-algorhytmus methoden
+bool minimax_isMovesLeft(char[9]);
+int minimax_evaluate(char[9]);
+int minimax_Recusion(char[9], int, bool);
+int minimax_findBestMove(char[9]);
+//Spiel methoden
+void feldZeichnen(char[9]);
+void ladebalken();
+int zug(char[9], int, int);
+int gameover_bedingung(char[9], int);
+int menu();
+int mode();
+void spiel(int, int, bool, char[9], int, int);
+//bot methoden
+bool zugErmittlung(char, char[9], bool);
+void bot(char[9], int);
+
+int main()
+{
+	char feldarray[9];
+	bool gameover = false, beendet = false;
+	int turn = 0;
+	int anfangs_spieler, spieler = 0;
+	int modus = 1;
+
+	//zufallsgeneration des anfangsspielers
+	srand(time(NULL));
+	anfangs_spieler = rand() % (2);
+
+	//felder vorläufig mit leerstelle befüllen
+	for (int i = 0; i < 9; i++)
+	{
+		feldarray[i] = ' ';
+	}
+	
+	//spaßeshalber
+	ladebalken();
+
+	//menüaufruf und schlaufe bis das programm manuell beendet wird
+	while (beendet == false)
+	{
+		int eingabe = menu();
+		//Spielstart
+		if (eingabe == 1)
+		{
+			spiel(spieler, anfangs_spieler, gameover, feldarray, turn, modus);
+			for (int i = 0; i < 9; i++)
+			{
+				feldarray[i] = ' ';
+			}
+		}
+		//Modusauswahl
+		else if (eingabe == 2)
+		{
+			modus = mode();
+		}
+		//Programm wird beendet
+		else if (eingabe == 3)
+		{
+			beendet = true;
+		}
+	}
+}
 
 ////////////////////////////////////////////////////////////////
 //			Minimax Anteile									  //
 ////////////////////////////////////////////////////////////////
-
-bool minimax_isMovesLeft(char[9]);			//minimax-algorhytmus methoden
-int minimax_evaluate(char[9]);
-int minimax_Recusion(char[9], int, bool);
-int minimax_findBestMove(char[9]);
-
 
 bool minimax_isMovesLeft(char feldarray[9])
 {
@@ -161,64 +220,9 @@ int minimax_findBestMove(char feldarray[9])
 	return bestMove;
 }
 
-//Prototyping
-
-void feldZeichnen(char[9]);					//Spiel methoden
-void ladebalken();
-int zug(char[9], int, int);
-int gameover_bedingung(char[9], int);
-int menu();
-int mode();
-void spiel(int, int, bool, char[9], int, int);
-bool zugErmittlung(char, char[9], bool);	//bot methoden
-void bot(char[9], int);
-
-int main()
-{
-	char feldarray[9];
-	bool gameover = false, beendet = false;
-	int turn = 0;
-	int anfangs_spieler, spieler = 0;
-	int modus = 1;
-
-	//zufallsgeneration des anfangsspielers
-	srand(time(NULL));
-	anfangs_spieler = rand() % (2);
-
-	//felder vorläufig mit leerstelle befüllen
-	for (int i = 0; i < 9; i++)
-	{
-		feldarray[i] = ' ';
-	}
-	
-	//spaßeshalber
-	ladebalken();
-
-	//menüaufruf und schlaufe bis das programm manuell beendet wird
-	while (beendet == false)
-	{
-		int eingabe = menu();
-		//Spielstart
-		if (eingabe == 1)
-		{
-			spiel(spieler, anfangs_spieler, gameover, feldarray, turn, modus);
-			for (int i = 0; i < 9; i++)
-			{
-				feldarray[i] = ' ';
-			}
-		}
-		//Modusauswahl
-		else if (eingabe == 2)
-		{
-			modus = mode();
-		}
-		//Programm wird beendet
-		else if (eingabe == 3)
-		{
-			beendet = true;
-		}
-	}
-}
+////////////////////////////////////////////////////////////////
+//			SpielMethoden									  //
+////////////////////////////////////////////////////////////////
 
 void feldZeichnen(char feldarray[9])
 {
@@ -236,6 +240,7 @@ void feldZeichnen(char feldarray[9])
 
 void ladebalken()
 {
+	//Erstellt einen ladebalken aus style gründen
 	for (int i = 0; i < 10; i++)
 	{
 		cout << ".";
@@ -245,139 +250,9 @@ void ladebalken()
 	system("cls");
 }
 
-bool zugErmittlung(char symbol, char feldarray[9], bool zugermittelt)
-{
-	//horizontal
-	if (zugermittelt == false)
-	{
-		for (int i = 0; i < 9; i = i + 3)
-		{
-			if (feldarray[i] == symbol && feldarray[i + 1] == symbol && feldarray[i + 2] == ' ')
-			{
-				feldarray[i + 2] = 'X';
-				zugermittelt = true;
-				break;
-			}
-			if (feldarray[i + 1] == symbol && feldarray[i + 2] == symbol && feldarray[i] == ' ')
-			{
-				feldarray[i] = 'X';
-				zugermittelt = true;
-				break;
-			}
-			if (feldarray[i] == symbol && feldarray[i + 2] == symbol && feldarray[i + 1] == ' ')
-			{
-				feldarray[i + 1] = 'X';
-				zugermittelt = true;
-				break;
-			}
-		}
-	}
-	//vertikal
-	if (zugermittelt == false)
-	{
-		for (int i = 0; i < 9; i++)
-		{
-			if (feldarray[i] == symbol && feldarray[i + 3] == symbol && feldarray[i + 6] == ' ')
-			{
-				feldarray[i + 6] = 'X';
-				zugermittelt = true;
-				break;
-			}
-			if (feldarray[i + 3] == symbol && feldarray[i + 6] == symbol && feldarray[i] == ' ')
-			{
-				feldarray[i] = 'X';
-				zugermittelt = true;
-				break;
-			}
-			if (feldarray[i] == symbol && feldarray[i + 6] == symbol && feldarray[i + 3] == ' ')
-			{
-				feldarray[i + 3] = 'X';
-				zugermittelt = true;
-				break;
-			}
-		}
-	}
-	//diagonal
-	if (zugermittelt == false)
-	{
-		if (feldarray[0] == symbol && feldarray[4] == symbol && feldarray[8] == ' ')
-		{
-			feldarray[8] = 'X';
-			zugermittelt = true;
-		}
-		else if (feldarray[0] == symbol && feldarray[8] == symbol && feldarray[4] == ' ')
-		{
-			feldarray[4] = 'X';
-			zugermittelt = true;
-		}
-		else if (feldarray[4] == symbol && feldarray[8] == symbol && feldarray[0] == ' ')
-		{
-			feldarray[0] = 'X';
-			zugermittelt = true;
-		}
-		else if (feldarray[2] == symbol && feldarray[4] == symbol && feldarray[6] == ' ')
-		{
-			feldarray[6] = 'X';
-			zugermittelt = true;
-		}
-		else if (feldarray[4] == symbol && feldarray[6] == symbol && feldarray[2] == ' ')
-		{
-			feldarray[2] = 'X';
-			zugermittelt = true;
-		}
-		else if (feldarray[2] == symbol && feldarray[6] == symbol && feldarray[4] == ' ')
-		{
-			feldarray[8] = 'X';
-			zugermittelt = true;
-		}
-	}
-	return zugermittelt;
-}
-
-void bot(char feldarray[9], int spieler)
-{
-	//bool ersterZug = false;
-	//bool zugermittelt = false;
-	//int zug = -1;
-
-	////ersterZug
-	//for (int i = 0; i < 9; i++)
-	//{
-	//	if (feldarray[i] != ' ')
-	//	{
-	//		ersterZug = false;
-	//		break;
-	//	}
-	//	else ersterZug = true;
-	//}
-	//if (ersterZug == true)
-	//{
-	//	feldarray[4] = 'X';
-	//	zugermittelt = true;
-	//}
-	//if (zugermittelt == false)
-	//{	//gewinnzug spielen
-	//	zugermittelt = zugErmittlung('X', feldarray, zugermittelt);
-	//}
-	//if (zugermittelt == false)
-	//{
-	//	//Verliererzug verhindern
-	//	zugermittelt = zugErmittlung('O', feldarray, zugermittelt);
-	//}
-	//if (zugermittelt == false)
-	//{
-	//	while (feldarray[zug] != ' ')
-	//	{
-	//		zug = rand() % (9) + 1;
-	//	}
-	//	feldarray[zug] = 'X';
-	//}
-
-	feldarray[minimax_findBestMove(feldarray)] = 'X';
-}
-
 int zug(char feldarray[9], int spieler, int modus)
 {
+	//EingabeAuforderung an Spieler
 	int eingabe = -1;
 
 	if (spieler == 1)
@@ -578,4 +453,139 @@ void spiel(int spieler, int anfangs_spieler, bool gameover, char feldarray[9], i
 
 		//system("pause");
 	}
+}
+
+////////////////////////////////////////////////////////////////
+//	  Manuelle BotMethoden (Werden momentan nicht benutzt)    //
+////////////////////////////////////////////////////////////////
+
+bool zugErmittlung(char symbol, char feldarray[9], bool zugermittelt)
+{
+//	//horizontal
+//	if (zugermittelt == false)
+//	{
+//		for (int i = 0; i < 9; i = i + 3)
+//		{
+//			if (feldarray[i] == symbol && feldarray[i + 1] == symbol && feldarray[i + 2] == ' ')
+//			{
+//				feldarray[i + 2] = 'X';
+//				zugermittelt = true;
+//				break;
+//			}
+//			if (feldarray[i + 1] == symbol && feldarray[i + 2] == symbol && feldarray[i] == ' ')
+//			{
+//				feldarray[i] = 'X';
+//				zugermittelt = true;
+//				break;
+//			}
+//			if (feldarray[i] == symbol && feldarray[i + 2] == symbol && feldarray[i + 1] == ' ')
+//			{
+//				feldarray[i + 1] = 'X';
+//				zugermittelt = true;
+//				break;
+//			}
+//		}
+//	}
+//	//vertikal
+//	if (zugermittelt == false)
+//	{
+//		for (int i = 0; i < 9; i++)
+//		{
+//			if (feldarray[i] == symbol && feldarray[i + 3] == symbol && feldarray[i + 6] == ' ')
+//			{
+//				feldarray[i + 6] = 'X';
+//				zugermittelt = true;
+//				break;
+//			}
+//			if (feldarray[i + 3] == symbol && feldarray[i + 6] == symbol && feldarray[i] == ' ')
+//			{
+//				feldarray[i] = 'X';
+//				zugermittelt = true;
+//				break;
+//			}
+//			if (feldarray[i] == symbol && feldarray[i + 6] == symbol && feldarray[i + 3] == ' ')
+//			{
+//				feldarray[i + 3] = 'X';
+//				zugermittelt = true;
+//				break;
+//			}
+//		}
+//	}
+//	//diagonal
+//	if (zugermittelt == false)
+//	{
+//		if (feldarray[0] == symbol && feldarray[4] == symbol && feldarray[8] == ' ')
+//		{
+//			feldarray[8] = 'X';
+//			zugermittelt = true;
+//		}
+//		else if (feldarray[0] == symbol && feldarray[8] == symbol && feldarray[4] == ' ')
+//		{
+//			feldarray[4] = 'X';
+//			zugermittelt = true;
+//		}
+//		else if (feldarray[4] == symbol && feldarray[8] == symbol && feldarray[0] == ' ')
+//		{
+//			feldarray[0] = 'X';
+//			zugermittelt = true;
+//		}
+//		else if (feldarray[2] == symbol && feldarray[4] == symbol && feldarray[6] == ' ')
+//		{
+//			feldarray[6] = 'X';
+//			zugermittelt = true;
+//		}
+//		else if (feldarray[4] == symbol && feldarray[6] == symbol && feldarray[2] == ' ')
+//		{
+//			feldarray[2] = 'X';
+//			zugermittelt = true;
+//		}
+//		else if (feldarray[2] == symbol && feldarray[6] == symbol && feldarray[4] == ' ')
+//		{
+//			feldarray[8] = 'X';
+//			zugermittelt = true;
+//		}
+//	}
+//	return zugermittelt;
+}
+
+void bot(char feldarray[9], int spieler)
+{
+	//bool ersterZug = false;
+	//bool zugermittelt = false;
+	//int zug = -1;
+
+	////ersterZug
+	//for (int i = 0; i < 9; i++)
+	//{
+	//	if (feldarray[i] != ' ')
+	//	{
+	//		ersterZug = false;
+	//		break;
+	//	}
+	//	else ersterZug = true;
+	//}
+	//if (ersterZug == true)
+	//{
+	//	feldarray[4] = 'X';
+	//	zugermittelt = true;
+	//}
+	//if (zugermittelt == false)
+	//{	//gewinnzug spielen
+	//	zugermittelt = zugErmittlung('X', feldarray, zugermittelt);
+	//}
+	//if (zugermittelt == false)
+	//{
+	//	//Verliererzug verhindern
+	//	zugermittelt = zugErmittlung('O', feldarray, zugermittelt);
+	//}
+	//if (zugermittelt == false)
+	//{
+	//	while (feldarray[zug] != ' ')
+	//	{
+	//		zug = rand() % (9) + 1;
+	//	}
+	//	feldarray[zug] = 'X';
+	//}
+
+	feldarray[minimax_findBestMove(feldarray)] = 'X';
 }
