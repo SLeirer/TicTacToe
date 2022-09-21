@@ -12,6 +12,7 @@
 using namespace std;
 
 //Prototyping
+int halloGithub;
 bool minimax_isMovesLeft(char[9]);			//minimax-algorhytmus methoden
 int minimax_evaluate(char[9]);
 int minimax_minimax(char[9], int, bool);
