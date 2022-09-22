@@ -6,18 +6,18 @@
 using namespace std;
 
 ////////////////////////////////////////////////////////////////
-//          noch zu erledigenden Aufgaben                     //
+//              noch zu erledigenden Aufgaben                 //
 ////////////////////////////////////////////////////////////////
 /*
-		Kommentierung
+		Alles was Vorgenommen Wurde ist erledigt
 */
 
 //Prototyping
 //minimax-algorhytmus methoden
-bool minimax_isMovesLeft(char[9]);
-int minimax_evaluate(char[9]);
-int minimax_Recusion(char[9], int, bool);
-int minimax_findBestMove(char[9]);
+bool minimax_ZuegeNochMoeglich(char[9]);
+int minimax_ZugWertung(char[9]);
+int minimax_Rekursion(char[9], int, bool);
+int minimax_findeBestenZug(char[9]);
 //Spiel methoden
 void feldZeichnen(char[9]);
 void ladebalken();
@@ -30,13 +30,17 @@ void spiel(int, int, bool, char[9], int, int);
 bool zugErmittlung(char, char[9], bool);
 void bot(char[9], int);
 
+////////////////////////////////////////////////////////////////
+//                       Main                                 //
+////////////////////////////////////////////////////////////////
+
 int main()
 {
-	char feldarray[9];
-	bool gameover = false, beendet = false;
-	int turn = 0;
-	int anfangs_spieler, spieler = 0;
-	int modus = 1;
+	char spielFeldArray[9];						//inhalt der Spielfelder
+	bool gameover = false, beendet = false;		//Variablen zur beendung der Spielschleife und der Programmschleife
+	int anzahlZuege = 0;						//momentaner zug
+	int anfangs_spieler, spieler = 0;			//SpielerVariablen
+	int modus = 1;								//Standardmaeßig spielmodus ist gegen bot (1) sonst localer multiplayer gegen einen anderen spieler.
 
 	//zufallsgeneration des anfangsspielers
 	srand(time(NULL));
@@ -45,23 +49,26 @@ int main()
 	//felder vorläufig mit leerstelle befüllen
 	for (int i = 0; i < 9; i++)
 	{
-		feldarray[i] = ' ';
+		spielFeldArray[i] = ' ';
 	}
 	
-	//spaßeshalber
+	//spaßeshalber ein Ladebalken, des geschmacks wegen
 	ladebalken();
 
 	//menüaufruf und schlaufe bis das programm manuell beendet wird
 	while (beendet == false)
 	{
+		//menu aufruf mit eingabeaufforderung
 		int eingabe = menu();
 		//Spielstart
 		if (eingabe == 1)
 		{
-			spiel(spieler, anfangs_spieler, gameover, feldarray, turn, modus);
+			//Spiel wird ausgefuehrt mit eingestellten modus
+			spiel(spieler, anfangs_spieler, gameover, spielFeldArray, anzahlZuege, modus);
+			//nach der beendung des spiels wird das spielfeld zurückgesetzt.
 			for (int i = 0; i < 9; i++)
 			{
-				feldarray[i] = ' ';
+				spielFeldArray[i] = ' ';
 			}
 		}
 		//Modusauswahl
@@ -78,12 +85,12 @@ int main()
 }
 
 ////////////////////////////////////////////////////////////////
-//			Minimax Anteile									  //
+//                   Minimax Anteile                          //
 ////////////////////////////////////////////////////////////////
 
-bool minimax_isMovesLeft(char feldarray[9])
+bool minimax_ZuegeNochMoeglich(char feldarray[9])
 {
-	//Gibt true zurück falls es noch offene stellen gibt
+	//Gibt true zurück falls es noch offene spielfeldstellen gibt
 	for (int i = 0; i < 9; i++)
 	{
 		if (feldarray[i] == ' ')return true;
@@ -91,10 +98,11 @@ bool minimax_isMovesLeft(char feldarray[9])
 	return false;
 }
 
-int minimax_evaluate(char feldarray[9])
+int minimax_ZugWertung(char feldarray[9])
 {
 	//Prüft ob einer der spieler gewonnen hat oder nicht und gibt auf grund dessen einen wert zurück
 	//werte: -10 für spieler, 10 für bot, 0 für unentschieden
+	
 	//Horizontal victory check
 	for (int i = 0; i < 9; i = i + 3)
 	{
@@ -154,16 +162,17 @@ int minimax_evaluate(char feldarray[9])
 	return 0;
 }
 
-int minimax_Recusion(char feldarray[9], int depth, bool isMax)
+int minimax_Rekursion(char feldarray[9], int depth, bool isMax)
 {
 	//ruft recursiv die minimax_Recursion's methode auf solange bis die Endbedingungen erreicht sind
+	
 	//Wert nach dem die züge gemessen werden
-	int score = minimax_evaluate(feldarray);
+	int score = minimax_ZugWertung(feldarray);
 
 	//Werte werden zurückgegeben wenn alle züge ausgeschöpft wurden
 	if (score == 10)return score;
 	if (score == -10)return score;
-	if (minimax_isMovesLeft(feldarray) == false)return 0;
+	if (minimax_ZuegeNochMoeglich(feldarray) == false)return 0;
 
 	if (isMax)
 	{
@@ -174,7 +183,7 @@ int minimax_Recusion(char feldarray[9], int depth, bool isMax)
 			if (feldarray[i] == ' ')
 			{
 				feldarray[i] = 'X';
-				best = max(best, minimax_Recusion(feldarray, depth + 1, !isMax));
+				best = max(best, minimax_Rekursion(feldarray, depth + 1, !isMax));
 				feldarray[i] = ' ';
 			}
 		}
@@ -189,7 +198,7 @@ int minimax_Recusion(char feldarray[9], int depth, bool isMax)
 			if (feldarray[i] == ' ')
 			{
 				feldarray[i] = 'O';
-				best = min(best, minimax_Recusion(feldarray, depth + 1, !isMax));
+				best = min(best, minimax_Rekursion(feldarray, depth + 1, !isMax));
 				feldarray[i] = ' ';
 			}
 		}
@@ -197,7 +206,7 @@ int minimax_Recusion(char feldarray[9], int depth, bool isMax)
 	}
 }
 
-int minimax_findBestMove(char feldarray[9])
+int minimax_findeBestenZug(char feldarray[9])
 {
 	int bestVal = -1000;
 	int bestMove = -1;
@@ -207,7 +216,7 @@ int minimax_findBestMove(char feldarray[9])
 		if (feldarray[i] == ' ')
 		{
 			feldarray[i] = 'X';
-			int moveVal = minimax_Recusion(feldarray, 0, false);
+			int moveVal = minimax_Rekursion(feldarray, 0, false);
 			feldarray[i] = ' ';
 
 			if (moveVal > bestVal)
@@ -221,12 +230,12 @@ int minimax_findBestMove(char feldarray[9])
 }
 
 ////////////////////////////////////////////////////////////////
-//			SpielMethoden									  //
+//                   SpielMethoden                            //
 ////////////////////////////////////////////////////////////////
 
 void feldZeichnen(char feldarray[9])
 {
-	//Felderstellung mit arrayvariablen
+	//Spielfelderstellung mit arrayvariablen
 	cout << "\n\n"
 		<< "\t" << "-------------" << endl
 		<< "\t" << "| " << feldarray[0] << " | " << feldarray[1] << " | " << feldarray[2] << " |" << endl
@@ -253,9 +262,10 @@ void ladebalken()
 int zug(char feldarray[9], int spieler, int modus)
 {
 	//EingabeAuforderung an Spieler
+
 	int eingabe = -1;
 
-	if (spieler == 1)
+	if (spieler == 1)	//spieler eins mit O Zeichen
 	{
 		while (eingabe < 1 || eingabe > 9 || feldarray[eingabe - 1] != ' ')
 		{
@@ -265,11 +275,11 @@ int zug(char feldarray[9], int spieler, int modus)
 		}
 		feldarray[eingabe - 1] = 'O';
 	}
-	else if (spieler == -1)
+	else if (spieler == -1)	//spieler 2
 	{
-		if (modus == 1)bot(feldarray, spieler);
+		if (modus == 1)bot(feldarray, spieler);	//falls es sich um ein spielmodus mit bot handelt
 		else
-		{
+		{	//sonst Spieler 2 Mit X Zeichen
 			while (eingabe < 1 || eingabe > 9 || feldarray[eingabe - 1] != ' ')
 			{
 				cout << "Geben sie das feld was sie beschreiben wollen an (1-9): "; cin >> eingabe; cout << endl;
@@ -283,7 +293,7 @@ int zug(char feldarray[9], int spieler, int modus)
 	system("CLS");
 	feldZeichnen(feldarray);
 
-	spieler = spieler * (-1);
+	spieler = spieler * (-1);	//nach spielzug wird aktiver spieler ausgewechselt
 	return spieler;
 }
 
@@ -456,8 +466,11 @@ void spiel(int spieler, int anfangs_spieler, bool gameover, char feldarray[9], i
 }
 
 ////////////////////////////////////////////////////////////////
-//	  Manuelle BotMethoden (Werden momentan nicht benutzt)    //
+//                Manuelle BotMethoden                        //
 ////////////////////////////////////////////////////////////////
+//
+//		zugErmittlung wird momentan nicht genutzt
+//		bot beinhaltet vorige version von einem bot und ruft moment nur die Minimaxx methode auf.
 
 bool zugErmittlung(char symbol, char feldarray[9], bool zugermittelt)
 {
@@ -587,5 +600,6 @@ void bot(char feldarray[9], int spieler)
 	//	feldarray[zug] = 'X';
 	//}
 
-	feldarray[minimax_findBestMove(feldarray)] = 'X';
+	//Aufruf der Minimx methode zur Ermittlung des besten zuges.
+	feldarray[minimax_findeBestenZug(feldarray)] = 'X';
 }
