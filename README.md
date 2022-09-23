@@ -1,4 +1,4 @@
-TicTacToe with MiniMax in C++
+MiniMax Algorhytmus anhand TicTacToe Spiel In C++
 =================
 Projekt Arbeit aus dem Ersten Jahr meiner Ausbildung.
 Tic Tac Toe Consolen App mit Spielmodusauswahl und MiniMax Algorhytmus 
