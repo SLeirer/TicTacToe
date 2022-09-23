@@ -14,5 +14,5 @@ Tic Tac Toe Consolen App mit Spielmodusauswahl und MiniMax Algorhytmus
 
 ## Zur projekterstellung genutze software und resourcen
 
-Visual Studio community edition 2022
-Zur recherche von Minimax wurden diverse resourcen verwendet, welche genau weiß ich auch nicht mehr.
+* Visual Studio community edition 2022
+* Zur recherche von Minimax wurden diverse resourcen verwendet, welche genau weiß ich auch nicht mehr.
