@@ -36,11 +36,11 @@ void bot(char[9], int);
 
 int main()
 {
-	char spielFeldArray[9];						//inhalt der Spielfelder
+	char spielFeldArray[9];				//inhalt der Spielfelder
 	bool gameover = false, beendet = false;		//Variablen zur beendung der Spielschleife und der Programmschleife
-	int anzahlZuege = 0;						//momentaner zug
-	int anfangs_spieler, spieler = 0;			//SpielerVariablen
-	int modus = 1;								//Standardmaeßig spielmodus ist gegen bot (1) sonst localer multiplayer gegen einen anderen spieler.
+	int anzahlZuege = 0;				//momentaner zug
+	int anfangs_spieler, spieler = 0;		//SpielerVariablen
+	int modus = 1;					//Standardmaeßig spielmodus ist gegen bot (1) sonst localer multiplayer gegen einen anderen spieler.
 
 	//zufallsgeneration des anfangsspielers
 	srand(time(NULL));
