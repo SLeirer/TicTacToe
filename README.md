@@ -19,6 +19,6 @@ Das Projekt ist im zeitrahmen einer woche entstanden.
 
 ## Zur projekterstellung genutze software und resourcen
 
-* Visual Studio community edition 2022.
+* Visual Studio community edition 2020.
 * Zur recherche von Minimax wurden diverse online resourcen verwendet.
 * Powerpoint zur erstellung der Animation.
