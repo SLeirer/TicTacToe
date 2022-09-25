@@ -33,10 +33,10 @@ void spiel(int, int, bool, char[9], int, int);
 
 int main()
 {
-	char spielFeldArray[9];						//inhalt der Spielfelder
-	bool gameover = false, beendet = false;		//Variablen zur beendung der Spielschleife und der Programmschleife
-	int anzahlZuege = 0;						//momentaner zug
-	int anfangs_spieler, spieler = 0;			//SpielerVariablen
+	char spielFeldArray[9];						//Da das ticktactoe Spielfeld über 9 felder verfügt bietet sich hierfür ein 9-stelliges array an.
+	bool gameover = false, beendet = false;		//Booleans als endbedingung für spielschleifen
+	int anzahlZuege = 0;						//Spielzugzähler, findet momentan keinen nutzen, wurde drinnengelassen für den fall das dies später noch der fall ist
+	int anfangs_spieler, spieler = 0;			//Spielervariablen als int um zufallszahl für anfangsspieler generieren zu können und leicht den aktiven spieler zu wechseln.
 	int modus = 1;								//Standardmaeßig spielmodus ist gegen bot (1) sonst localer multiplayer gegen einen anderen spieler.
 
 	//zufallsgeneration des anfangsspielers
@@ -99,8 +99,10 @@ int minimax_ZugWertung(char feldarray[9])
 {
 	//Prüft ob einer der spieler gewonnen hat oder nicht und gibt auf grund dessen einen wert zurück
 	//werte: -10 für spieler, 10 für bot, 0 für unentschieden
+	//Die prüfungen fallen zweimal an, einmal für jeden spieler (X und O), es wäre möglich dies in eine Funktion auszulagern um sich den redundanten wiederholten code einzusparen.
+	//Da es sich nur um eine minimale widerholung handelt wäre die abänderung zu einer funktion, im nachhinein, aufwändiger als wie es sich lohnen würde.
 	
-	//Horizontal victory check
+	//Horizontaler Sieges check
 	for (int i = 0; i < 9; i = i + 3)
 	{
 		if (feldarray[i] == feldarray[i + 1] && feldarray[i + 1] == feldarray[i + 2] && feldarray[i] == 'X')
@@ -109,7 +111,7 @@ int minimax_ZugWertung(char feldarray[9])
 		}
 	}
 
-	//Vertikal victory check
+	//Vertikaler Sieges check
 	for (int i = 0; i < 9; i++)
 	{
 		if (feldarray[i] == feldarray[i + 3] && feldarray[i + 3] == feldarray[i + 6] && feldarray[i] == 'X')
@@ -118,7 +120,7 @@ int minimax_ZugWertung(char feldarray[9])
 		}
 	}
 
-	//Diagonal victory check
+	//Diagonaler Sieges check
 	if (feldarray[0] == feldarray[4] && feldarray[4] == feldarray[8] && feldarray[0] == 'X')
 	{
 		if (feldarray[0] == 'X')return 10;
@@ -128,7 +130,7 @@ int minimax_ZugWertung(char feldarray[9])
 		if (feldarray[2] == 'X')return 10;
 	}
 
-	//Horizontal victory check
+	//Horizontaler Sieges check
 	for (int i = 0; i < 9; i = i + 3)
 	{
 		if (feldarray[i] == feldarray[i + 1] && feldarray[i + 1] == feldarray[i + 2] && feldarray[i] == 'O')
@@ -137,7 +139,7 @@ int minimax_ZugWertung(char feldarray[9])
 		}
 	}
 
-	//Vertikal victory check
+	//Vertikal Sieges check
 	for (int i = 0; i < 9; i++)
 	{
 		if (feldarray[i] == feldarray[i + 3] && feldarray[i + 3] == feldarray[i + 6] && feldarray[i] == 'O')
@@ -146,7 +148,7 @@ int minimax_ZugWertung(char feldarray[9])
 		}
 	}
 
-	//Diagonal victory check
+	//Diagonal Sieges check
 	if (feldarray[0] == feldarray[4] && feldarray[4] == feldarray[8] && feldarray[0] == 'O')
 	{
 		if (feldarray[0] == 'O')return -10;
@@ -159,71 +161,71 @@ int minimax_ZugWertung(char feldarray[9])
 	return 0;
 }
 
-int minimax_Rekursion(char feldarray[9], int depth, bool isMax)
+int minimax_Rekursion(char feldarray[9], int tiefe, bool istMax)
 {
 	//ruft recursiv die minimax_Recursion's methode auf solange bis die Endbedingungen erreicht sind
 	
 	//Wert nach dem die züge gemessen werden
-	int score = minimax_ZugWertung(feldarray);
+	int wertung = minimax_ZugWertung(feldarray);
 
 	//Werte werden zurückgegeben wenn alle züge ausgeschöpft wurden
-	if (score == 10)return score;
-	if (score == -10)return score;
+	if (wertung == 10)return wertung;
+	if (wertung == -10)return wertung;
 	if (minimax_ZuegeNochMoeglich(feldarray) == false)return 0;
 
-	if (isMax)
+	if (istMax)
 	{
-		int best = -1000;
+		int besterWert = -1000;
 
 		for (int i = 0; i < 9; i++)
 		{
 			if (feldarray[i] == ' ')
 			{
 				feldarray[i] = 'X';
-				best = max(best, minimax_Rekursion(feldarray, depth + 1, !isMax));
+				besterWert = max(besterWert, minimax_Rekursion(feldarray, tiefe + 1, !istMax));
 				feldarray[i] = ' ';
 			}
 		}
-		return best;
+		return besterWert;
 	}
 	else
 	{
-		int best = 1000;
+		int besterWert = 1000;
 
 		for (int i = 0; i < 9; i++)
 		{
 			if (feldarray[i] == ' ')
 			{
 				feldarray[i] = 'O';
-				best = min(best, minimax_Rekursion(feldarray, depth + 1, !isMax));
+				besterWert = min(besterWert, minimax_Rekursion(feldarray, tiefe + 1, !istMax));
 				feldarray[i] = ' ';
 			}
 		}
-		return best;
+		return besterWert;
 	}
 }
 
 int minimax_findeBestenZug(char feldarray[9])
 {
-	int bestVal = -1000;
-	int bestMove = -1;
+	int besteWertung = -1000;
+	int besterZug = -1;
 
 	for (int i = 0; i < 9; i++)
 	{
 		if (feldarray[i] == ' ')
 		{
 			feldarray[i] = 'X';
-			int moveVal = minimax_Rekursion(feldarray, 0, false);
+			int ZugWert = minimax_Rekursion(feldarray, 0, false);
 			feldarray[i] = ' ';
 
-			if (moveVal > bestVal)
+			if (ZugWert > besteWertung)
 			{
-				bestMove = i;
-				bestVal = moveVal;
+				besterZug = i;
+				besteWertung = ZugWert;
 			}
 		}
 	}
-	return bestMove;
+	return besterZug;
 }
 
 ////////////////////////////////////////////////////////////////
@@ -395,7 +397,7 @@ int mode()
 	return eingabe;
 }
 
-void spiel(int spieler, int anfangs_spieler, bool gameover, char feldarray[9], int turn, int modus)
+void spiel(int spieler, int anfangs_spieler, bool gameover, char feldarray[9], int momentanerZug, int modus)
 {
 	if (anfangs_spieler == 0)
 	{
@@ -432,8 +434,11 @@ void spiel(int spieler, int anfangs_spieler, bool gameover, char feldarray[9], i
 	{
 		feldZeichnen(feldarray);
 		spieler = zug(feldarray, spieler, modus);
-		if (gameover_bedingung(feldarray, spieler) != 2)gameover = true;
-		turn = turn + 1;
+		if (gameover_bedingung(feldarray, spieler) != 2)
+			gameover = true;
+
+		momentanerZug = momentanerZug + 1;
+
 		if (gameover == true)
 		{
 			cout << "Game Over" << endl;
@@ -456,7 +461,8 @@ void spiel(int spieler, int anfangs_spieler, bool gameover, char feldarray[9], i
 		}
 		Sleep(100);
 
-		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), { 0, 0 });	//console wird nur überschrieben nicht gelöscht
+		//Übernhame aus einem projekt wo consolen-flickern bei aktualisierung vermieden werden sollte, hier nicht strickt notwendig ein clearscreen würde auch gehen
+		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), { 0, 0 });
 
 		//system("pause");
 	}
