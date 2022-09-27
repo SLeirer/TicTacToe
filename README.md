@@ -1,9 +1,15 @@
 MiniMax Algorhytmus anhand TicTacToe Spiel In C++
 =================
-Projekt Arbeit aus dem Ersten Jahr meiner Ausbildung.  
-Tic Tac Toe Consolen App mit Spielmodusauswahl und MiniMax Algorhytmus für den Bot.  
+# Inhalt
+[Infos](#infos)  
+[Spielanleitung](#spielanleitung)  
+[Animation](#animierte-veranschaulichung-des-minimax-algorhytmus)  
+[Beschreibung des Minimax Algorhytmus](#genauere-beschreibung-des-minimax-algorhytmus)  
+[genutzte Software und resourcen](#zur-projekterstellung-genutze-software-und-resourcen)
 
 ## Infos
+Projekt Arbeit aus dem Ersten Jahr meiner Ausbildung.  
+Tic Tac Toe Consolen App mit Spielmodusauswahl und MiniMax Algorhytmus für den Bot.  
 Bis auf den Code in eine IDE zu kopieren und auszuführen, gibt es momentan keine möglichkeit das Spiel zu testen.  
 Das Ziel des Projekts war sich mit dem MiniMax Algorhytmus auseinanderzusetzen, somit blieb sonstiges relativ rudimentär, wie beispielweise die Darstellung.  
 Das Projekt ist im zeitrahmen einer woche entstanden.
