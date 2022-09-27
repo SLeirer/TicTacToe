@@ -17,6 +17,8 @@ Das Projekt ist im zeitrahmen einer woche entstanden.
 ## Animierte veranschaulichung des Minimax algorhytmus
 ![minimax animated](https://user-images.githubusercontent.com/105810795/191184028-6cf81603-61af-4a84-bfd7-f9d000e37150.gif)
 
+### Genauere Beschreibung des MiniMax Algorhytmus
+
 ## Zur projekterstellung genutze software und resourcen
 
 * Visual Studio community edition 2020.
